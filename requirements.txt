@@ -1,0 +1,10 @@
+Django==1.5
+South
+django-debug-toolbar
+coverage
+django-coverage
+wsgiref
+sorl-thumbnail
+PIL
+django-annoying
+psycopg2
