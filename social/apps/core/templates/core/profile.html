@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+    <div class="row-fluid">
+        <div class="span4">
+            <img src="{{ MEDIA_URL }}/pic.jpg">
+        </div>
+        <div class="span8">
+            <p><h4>Hello, Anton Kasyanov!</h4></p>
+            <p>Gender: male</p>
+            <p>Birthdate: 23.04.1994</p>
+        </div>
+    </div>
+{% endblock content %}
