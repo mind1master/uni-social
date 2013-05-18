@@ -35,3 +35,5 @@ ROOT_URLCONF = 'social.urls'
 WSGI_APPLICATION = 'social.wsgi.application'
 
 AUTH_PROFILE_MODULE = 'core.SocialProfile'
+
+LOGIN_URL = '/login/'

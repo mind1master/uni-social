@@ -4,14 +4,20 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf import settings
 from django.conf.urls.static import static
 from social.apps.core.views import HomeView, ProfileView
+from django.contrib.auth.decorators import login_required
 
 
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^$', HomeView.as_view(), name='home_page'),
-    url(r'^login/$', 'social.apps.core.views.LoginView.as_view()', name='login_page'),
-    url(r'^profile/(?P<pk>\d+)/$', ProfileView.as_view()),
+    url(r'^$', login_required(HomeView.as_view()), name='home_page'),
+    url(r'^login/$', 'social.apps.core.views.custom_login', {
+        'template_name':'core/login.html',
+    }, name='login_page'),
+    url(r'^logout/$', 'django.contrib.auth.views.logout', {
+        'next_page': '/',
+        }, name='logout_page'),
+    url(r'^profile/(?P<pk>\d+)/$', login_required(ProfileView.as_view()), name='profile_page'),
     url(r'^admin/', include(admin.site.urls)),
 )
 
