@@ -15,10 +15,10 @@ class Migration(SchemaMigration):
         db.create_table(u'core_socialprofile', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('user', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True)),
-            ('date_of_birth', self.gf('django.db.models.fields.DateField')()),
-            ('home_town', self.gf('django.db.models.fields.CharField')(max_length=20)),
-            ('phone_number', self.gf('django.db.models.fields.CharField')(max_length=10)),
-            ('skype_id', self.gf('django.db.models.fields.CharField')(max_length=20)),
+            ('date_of_birth', self.gf('django.db.models.fields.DateField')(null=True)),
+            ('home_town', self.gf('django.db.models.fields.CharField')(max_length=20, blank=True)),
+            ('phone_number', self.gf('django.db.models.fields.CharField')(max_length=10, blank=True)),
+            ('skype_id', self.gf('django.db.models.fields.CharField')(max_length=20, blank=True)),
         ))
         db.send_create_signal(u'core', ['SocialProfile'])
 
@@ -55,7 +55,7 @@ class Migration(SchemaMigration):
         },
         u'auth.user': {
             'Meta': {'object_name': 'User'},
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2013, 5, 18, 7, 25, 12, 455084)'}),
+            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2013, 5, 18, 7, 38, 5, 70442)'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Group']", 'symmetrical': 'False', 'blank': 'True'}),
@@ -63,7 +63,7 @@ class Migration(SchemaMigration):
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2013, 5, 18, 7, 25, 12, 454323)'}),
+            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2013, 5, 18, 7, 38, 5, 69702)'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
@@ -78,11 +78,11 @@ class Migration(SchemaMigration):
         },
         u'core.socialprofile': {
             'Meta': {'object_name': 'SocialProfile'},
-            'date_of_birth': ('django.db.models.fields.DateField', [], {}),
-            'home_town': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
+            'date_of_birth': ('django.db.models.fields.DateField', [], {'null': 'True'}),
+            'home_town': ('django.db.models.fields.CharField', [], {'max_length': '20', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'phone_number': ('django.db.models.fields.CharField', [], {'max_length': '10'}),
-            'skype_id': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
+            'phone_number': ('django.db.models.fields.CharField', [], {'max_length': '10', 'blank': 'True'}),
+            'skype_id': ('django.db.models.fields.CharField', [], {'max_length': '20', 'blank': 'True'}),
             'user': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True'})
         }
     }
