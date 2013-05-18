@@ -10,6 +10,9 @@ class SocialProfile(models.Model):
     phone_number = models.CharField(max_length=10, blank=True)
     skype_id = models.CharField(max_length=20, blank=True)
 
+    def __unicode__(self):
+        return 'Profile of {} {}'.format(self.user.first_name, self.user.last_name)
+
     def get_wallposts_received(self):
         return AnyPost.objects.filter(receiver=self, post_type=AnyPost.WALL).order_by('-timestamp')
 
@@ -26,3 +29,11 @@ class AnyPost(models.Model):
     text = models.TextField(max_length=1000)
     timestamp = models.DateTimeField(auto_now_add=True)
     post_type = models.CharField(max_length=50, choices=POST_TYPES, default=MESSAGE)
+
+    def __unicode__(self):
+        return '{} to {} from {} at {}'.format(
+            self.post_type,
+            self.receiver,
+            self.sender,
+            self.timestamp,
+        )
