@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import User
 
-class SocialUser(AbstractBaseUser):
-    first_name = models.CharField(max_length=20, required=True)
-    last_name = models.CharField(max_length=20)
-    date_of_birth = models.DateField()
+class SocialProfile(models.Model):
+    user = models.OneToOneField(User)
 
-    home_town = models.CharField(max_length=20)
-
-    phone_number = models.CharField(max_length=10)
-    skype_id = models.CharField(max_length=20)
+    date_of_birth = models.DateField(null=True)
+    home_town = models.CharField(max_length=20, null=True)
+    phone_number = models.CharField(max_length=10, null=True)
+    skype_id = models.CharField(max_length=20, null=True)

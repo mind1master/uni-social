@@ -23,7 +23,7 @@ SITE_ID = 1
 
 TIME_ZONE = 'America/Chicago'
 LANGUAGE_CODE = 'en-us'
-USE_TZ = True
+USE_TZ = False
 
 USE_I18N = True
 USE_L10N = True
@@ -34,4 +34,4 @@ ROOT_URLCONF = 'social.urls'
 
 WSGI_APPLICATION = 'social.wsgi.application'
 
-AUTH_USER_MODEL = 'core.models.SocialUser'
+AUTH_PROFILE_MODULE = 'core.SocialProfile'
