@@ -8,3 +8,5 @@ sorl-thumbnail
 PIL
 django-annoying
 psycopg2
+gunicorn 
+dj-database-url
