@@ -10,6 +10,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', HomeView.as_view(), name='home_page'),
+    url(r'^login/$', 'social.apps.core.views.LoginView.as_view()', name='login_page'),
     url(r'^profile/(?P<pk>\d+)/$', ProfileView.as_view()),
     url(r'^admin/', include(admin.site.urls)),
 )
