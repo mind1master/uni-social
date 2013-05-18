@@ -41,10 +41,14 @@ class ProfileView(DetailView, FormMixin):
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         if form.is_valid():
-            form.save()
+            post = form.save(commit=False)
+            post.receiver = self.get_object().user
+            post.sender = request.user
+            post.save()
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
+
 
 def custom_login(request, **kwargs):
     if request.user.is_authenticated():
