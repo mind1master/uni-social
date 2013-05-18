@@ -10,6 +10,8 @@ class SocialProfile(models.Model):
     phone_number = models.CharField(max_length=10, blank=True)
     skype_id = models.CharField(max_length=20, blank=True)
 
+    def get_wallposts_received(self):
+        return AnyPost.objects.filter(receiver=self, post_type=AnyPost.WALL).order_by('-timestamp')
 
 class AnyPost(models.Model):
     MESSAGE = 'message'
