@@ -19,8 +19,8 @@ class AnyPost(models.Model):
         (WALL, 'Wall'),
     )
 
-    sender = models.ForeignKey(User)
-    receiver = models.ForeignKey(User)
+    sender = models.ForeignKey(User, related_name='posts_sent')
+    receiver = models.ForeignKey(User, related_name='posts_received')
     text = models.TextField(max_length=1000)
     timestamp = models.DateTimeField(auto_now_add=True)
     post_type = models.CharField(max_length=50, choices=POST_TYPES, default=MESSAGE)
