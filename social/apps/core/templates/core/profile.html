@@ -23,7 +23,8 @@
                             <div class="thumbnail">
                                 <h3>Post by {{ post.sender.first_name }} {{ post.sender.last_name }}</h3>
                                 <i>at {{ post.timestamp }}</i>
-                                <p>{{ post.text }}</p>
+                                <p>{{ post.text }}<a class="pull-right" href="#">Like</a></p>
+
                             </div>
                         </li>
                     </ul>
