@@ -59,8 +59,8 @@
             <div class="offset2 span2">
                 <ul class="nav nav-tabs nav-stacked affix side-menu">
                 {% block side_menu %}
-                    <li><a href="#">My profile</a></li>
-                    <li><a href="#">My Friends</a></li>
+                    <li><a href="{% url 'profile_page' user.pk %}">My profile</a></li>
+                    <li><a href="{% url 'friends_page' %}">My Friends</a></li>
                     <li><a href="#">My Messages</a></li>
                     <li><a href="{% url 'logout_page' %}">Log out</a></li>
 

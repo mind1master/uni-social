@@ -1,14 +1,18 @@
 # -*- coding: utf-8 -*-
 from django.views.generic.base import TemplateView
+from django.views.generic import DetailView, ListView
 from django.views.generic import DetailView
 from django.views.generic.edit import FormMixin
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.contrib.auth.views import login
+from django.views.decorators.http import require_POST
 from django.http import HttpResponseForbidden
 
 from social.apps.core.models import SocialProfile, AnyPost
 from social.apps.core.forms import WallPostForm
+
+
 
 class HomeView(TemplateView):
     template_name = 'core/home.html'
@@ -50,8 +54,33 @@ class ProfileView(DetailView, FormMixin):
             return self.form_invalid(form)
 
 
+
+class FriendsView(ListView):
+    template_name = 'core/friends_list.html'
+    model = SocialProfile
+    context_object_name = 'friends'
+
+    def get_context_data(self, **kwargs):
+        context = super(FriendsView, self).get_context_data(**kwargs)
+        context['friends'] = self.request.user.get_profile().friends.all
+        return context
+
+
 def custom_login(request, **kwargs):
     if request.user.is_authenticated():
         return redirect('/', **kwargs)
     else:
         return login(request, **kwargs)
+
+
+@require_POST
+def friends_manipulation(request):
+    if request.POST.get('add'):
+        #Adding a friend
+        request.user.get_profile().friends.add(SocialProfile.objects.get(pk=request.POST["pk"]))
+        return redirect(reverse('home_page'))
+
+    if request.POST.get('remove'):
+        #Adding a friend
+        request.user.get_profile().friends.remove(SocialProfile.objects.get(pk=request.POST["pk"]))
+        return redirect(reverse('home_page'))

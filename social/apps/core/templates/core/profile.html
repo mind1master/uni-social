@@ -5,6 +5,20 @@
     <div class="row-fluid">
         <div class="span4">
             <img src="{{ MEDIA_URL }}/pic.jpg">
+            <br/><br/>
+            {% if socialprofile.user != user %}
+                {% if socialprofile in user.get_profile.friends.all %}
+                    {{ socialprofile.user.first_name }} is your friend!
+                {% else %}
+                    <form action="{% url 'friends_manipulation' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="pk" value="{{ socialprofile.user.pk }}">
+                        <input class="btn btn-success" type="submit" name="add" value="Add friend">
+                    </form>
+                {% endif %}
+            {% else %}
+                It is You!
+            {% endif %}
         </div>
         <div class="span8">
             <p><h4>{{ socialprofile.user.first_name }} {{ socialprofile.user.last_name }}</h4></p>
