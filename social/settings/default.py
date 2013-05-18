@@ -34,3 +34,4 @@ ROOT_URLCONF = 'social.urls'
 
 WSGI_APPLICATION = 'social.wsgi.application'
 
+AUTH_USER_MODEL = 'core.models.SocialUser'
