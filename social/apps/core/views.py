@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.contrib.auth.views import login
 
-from social.apps.core.models import SocialProfile
+from social.apps.core.models import SocialProfile, AnyPost
 
 
 class HomeView(TemplateView):
@@ -23,6 +23,8 @@ class ProfileView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ProfileView, self).get_context_data(**kwargs)
+        wallposts = self.object.get_wallposts_received()
+        context['wallposts'] = wallposts
         return context
 
 def custom_login(request, **kwargs):

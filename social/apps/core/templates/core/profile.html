@@ -14,4 +14,24 @@
             <p>Skype: {{ socialprofile.skype_id }}</p>
         </div>
     </div>
+    <div class="row-fluid wallposts">
+        <div class="span12">
+            {% if wallposts %}
+                {% for post in wallposts %}
+                    <ul class="thumbnails">
+                        <li class="offset1 span10">
+                            <div class="thumbnail">
+                                <h3>Post by {{ post.sender.first_name }} {{ post.sender.last_name }}</h3>
+                                <i>at {{ post.timestamp }}</i>
+                                <p>{{ post.text }}<a class="pull-right" href="#">Like</a></p>
+
+                            </div>
+                        </li>
+                    </ul>
+                {% endfor %}
+            {% else %}
+                No wall posts yet
+            {% endif %}
+        </div>
+    </div>
 {% endblock content %}
