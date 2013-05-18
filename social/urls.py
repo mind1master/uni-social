@@ -3,13 +3,14 @@ from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf import settings
 from django.conf.urls.static import static
-from social.apps.core.views import HomeView
+from social.apps.core.views import HomeView, ProfileView
 
 
 admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', HomeView.as_view(), name='home_page'),
+    url(r'^profile/(?P<pk>\d+)/$', ProfileView.as_view()),
     url(r'^admin/', include(admin.site.urls)),
 )
 

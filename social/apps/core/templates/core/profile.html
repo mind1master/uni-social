@@ -7,9 +7,11 @@
             <img src="{{ MEDIA_URL }}/pic.jpg">
         </div>
         <div class="span8">
-            <p><h4>Hello, Anton Kasyanov!</h4></p>
-            <p>Gender: male</p>
-            <p>Birthdate: 23.04.1994</p>
+            <p><h4>{{ socialprofile.user.first_name }} {{ socialprofile.user.last_name }}</h4></p>
+            <p>Born at: {{ socialprofile.date_of_birth }}</p>
+            <p>Home town: {{ socialprofile.home_town }}</p>
+            <p>Phone: {{ socialprofile.phone_number }}</p>
+            <p>Skype: {{ socialprofile.skype_id }}</p>
         </div>
     </div>
 {% endblock content %}
