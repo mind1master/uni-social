@@ -18,6 +18,4 @@ class ProfileView(DetailView):
         wallposts = self.object.get_wallposts_received()
         context['wallposts'] = wallposts
         return context
-class LoginView(TemplateView):
-    template_name = 'core/login.html'
 
