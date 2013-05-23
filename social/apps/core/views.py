@@ -10,7 +10,7 @@ from django.views.decorators.http import require_POST
 from django.http import HttpResponseForbidden
 
 from social.apps.core.models import SocialProfile, AnyPost
-from social.apps.core.forms import WallPostForm
+from social.apps.core.forms import WallPostForm, ProfileForm
 
 
 
@@ -53,6 +53,45 @@ class ProfileView(DetailView, FormMixin):
         else:
             return self.form_invalid(form)
 
+
+class ProfileEditView(DetailView, FormMixin):
+    template_name = 'core/profile_edit.html'
+    model = SocialProfile
+    form_class = ProfileForm
+
+    def get_success_url(self):
+        return reverse('profile_page', kwargs={'pk': self.get_object().pk})
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfileEditView, self).get_context_data(**kwargs)
+        form = ProfileForm(
+            instance=self.request.user.get_profile(),
+            initial={
+                'name': self.request.user.first_name,
+                'last_name': self.request.user.last_name,
+            }
+        )
+        context['form'] = form
+
+        return context
+
+    def dispatch(self, request, *args, **kwargs):
+        if not int(kwargs['pk']) == request.user.pk:
+            return redirect(reverse('profile_page', kwargs={'pk': self.get_object().pk}))
+
+        return super(ProfileEditView, self).dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        form = ProfileForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save(commit=False)
+            user = request.user
+            user.first_name = form.cleaned_data['name']
+            user.last_name = form.cleaned_data['last_name']
+            user.save()
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
 
 
 class FriendsView(ListView):

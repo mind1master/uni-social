@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-from django.forms import ModelForm, HiddenInput, ModelChoiceField
+from django import forms
+from django.forms import ModelForm, HiddenInput, ModelChoiceField, CharField
 from django.contrib.auth.models import User
 
-from social.apps.core.models import AnyPost
+from social.apps.core.models import AnyPost, SocialProfile
 
 
 # Create the form class.
@@ -20,3 +21,12 @@ class WallPostForm(ModelForm):
         if commit:
             instance.save()
         return instance
+
+
+class ProfileForm(ModelForm):
+    name = CharField(max_length=20)
+    last_name = CharField(max_length=20)
+
+    class Meta:
+        model = SocialProfile
+        exclude = ['friends', 'user']

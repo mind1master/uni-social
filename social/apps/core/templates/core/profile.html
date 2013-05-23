@@ -6,7 +6,7 @@
 {% block content %}
     <div class="row-fluid">
         <div class="span4" style="text-align: center;">
-            <img src="{{ MEDIA_URL }}/pic.jpg" class="img-polaroid">
+            <img src="{{ MEDIA_URL }}/{{ socialprofile.avatar }}" class="img-polaroid">
             <br/><br/>
             {% if socialprofile.user != user %}
                 {% if socialprofile in user.get_profile.friends.all %}

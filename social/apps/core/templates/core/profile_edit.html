@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block extra_head_js %}
+    <script src="{{ STATIC_URL }}/js/profile_edit.js"></script>
+{% endblock %}
+
+{% block content %}
+<form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <legend>Edit profile information</legend>
+<div class="row-fluid">
+    <div class="span4" style="text-align: center;">
+        <img src="{{ MEDIA_URL }}{{ form.avatar.value }}" class="img-polaroid">
+        {{ form.avatar }}
+    </div>
+    <div class="span6 offset1">
+        <label class="control-label">Your name & last name:</label>
+            <div class="controls controls-row">{{ form.name }} {{ form.last_name }}</div>
+        <br/>
+        <table style="width: 100%">
+            <tr>
+                <td>Born at:</td><td><span class="muted">{{ form.date_of_birth }}</span></td>
+            </tr>
+            <tr>
+                <td>Home town:</td><td><span class="muted">{{ form.home_town }}</span></td>
+            </tr>
+            <tr>
+                <td>Phone:</td><td><span class="muted">{{ form.phone_number }}</span></td>
+            </tr>
+            <tr>
+                <td>Skype:</td><td><span class="muted">{{ form.skype_id }}</span></td>
+            <tr/>
+        </table>
+    </div>
+</div>
+    <div class="form-actions">
+        <button type="button" class="btn">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+    </div>
+</form>
+{% endblock content %}

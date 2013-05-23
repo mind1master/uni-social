@@ -5,12 +5,13 @@ from django.contrib.auth.models import User
 class SocialProfile(models.Model):
     user = models.OneToOneField(User)
 
+    avatar = models.ImageField(default='pic.jpg', upload_to='avatars')
     date_of_birth = models.DateField(null=True)
     home_town = models.CharField(max_length=20, blank=True)
     phone_number = models.CharField(max_length=10, blank=True)
     skype_id = models.CharField(max_length=20, blank=True)
 
-    friends = models.ManyToManyField('SocialProfile')
+    friends = models.ManyToManyField('SocialProfile', blank=True)
 
     def __unicode__(self):
         return 'Profile of {} {}'.format(self.user.first_name, self.user.last_name)
