@@ -2,6 +2,7 @@
 from annoying.decorators import render_to
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import TemplateView
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import FormMixin
@@ -9,7 +10,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.contrib.auth.views import login
 from django.views.decorators.http import require_POST
-from django.http import HttpResponseForbidden, Http404
+from django.http import HttpResponseForbidden, Http404, HttpResponse
 
 from social.apps.core.models import SocialProfile, AnyPost
 from social.apps.core.forms import WallPostForm, MessageForm
@@ -75,7 +76,8 @@ def messages_list(request):
     messages = messages.filter(
         Q(receiver=request.user) |
         Q(sender=request.user)
-    ).order_by('-timestamp')
+    ).order_by('seen', '-timestamp')
+    messages.update(seen=True)
     return {
         'messages': messages[:50],
     }
@@ -119,3 +121,11 @@ def friends_manipulation(request):
         #Adding a friend
         request.user.get_profile().friends.remove(SocialProfile.objects.get(pk=request.POST["pk"]))
         return redirect(reverse('home_page'))
+
+@csrf_exempt
+@require_POST
+def check_messages(request):
+    if request.POST.get('user_pk'):
+        user = User.objects.get(pk=request.POST.get('user_pk'))
+        return HttpResponse(user.get_profile().get_new_messages_count())
+    raise HttpResponseForbidden
