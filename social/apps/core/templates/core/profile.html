@@ -10,7 +10,7 @@
             <br/><br/>
             {% if socialprofile.user != user %}
                 {% if socialprofile in user.get_profile.friends.all %}
-                    {{ socialprofile.user.first_name }} is your friend!
+                    <a href="{% url 'message_write_page' socialprofile.user.pk %}" class="btn btn-success">Send a message</a>
                 {% else %}
                     <form action="{% url 'friends_manipulation' %}" method="POST">
                         {% csrf_token %}

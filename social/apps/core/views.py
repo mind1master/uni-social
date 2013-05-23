@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 from annoying.decorators import render_to
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.views.generic.base import TemplateView
 from django.views.generic import DetailView, ListView
-from django.views.generic import DetailView
 from django.views.generic.edit import FormMixin
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.contrib.auth.views import login
 from django.views.decorators.http import require_POST
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, Http404
 
 from social.apps.core.models import SocialProfile, AnyPost
-from social.apps.core.forms import WallPostForm
+from social.apps.core.forms import WallPostForm, MessageForm
 from django.db.models import Q
 
 
@@ -78,6 +78,27 @@ def messages_list(request):
     ).order_by('-timestamp')
     return {
         'messages': messages[:50],
+    }
+
+@login_required
+@render_to('core/message_write.html')
+def message_write(request, pk):
+    friend = User.objects.get(pk=pk)
+
+    if not friend.get_profile() in request.user.get_profile().friends.all():
+        raise Http404
+
+    form = MessageForm(request.POST or None)
+    if form.is_valid():
+        message = form.save(commit=False)
+        message.receiver = friend
+        message.sender = request.user
+        message.save()
+        return redirect(reverse('messages_page'))
+
+    return {
+        'form': form,
+        'friend': friend,
     }
 
 def custom_login(request, **kwargs):

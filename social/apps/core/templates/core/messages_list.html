@@ -38,6 +38,11 @@
                 <blockquote>
                     <p class="message-text">{{ message.text }}</p>
                 </blockquote>
+                {% if message.sender == user %}
+                    <a href="{% url 'message_write_page' message.receiver.pk %}" class="btn">Send one more</a>
+                {% else %}
+                    <a href="{% url 'message_write_page' message.sender.pk %}" class="btn">Reply</a>
+                {% endif %}
             </div>
          </div>
         <br/><br/>
