@@ -157,7 +157,7 @@ def search_friends(request):
         found = User.objects.filter(
             Q(first_name__icontains=q) |
             Q(last_name__icontains=q)
-        ).order_by('first_name')[:10]
+        ).order_by('first_name').exclude(pk=request.user.pk)[:10]
 
     return {
         'found': found,
