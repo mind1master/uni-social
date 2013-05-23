@@ -64,6 +64,7 @@ class ProfileEditView(DetailView, FormMixin):
 
     def get_context_data(self, **kwargs):
         context = super(ProfileEditView, self).get_context_data(**kwargs)
+
         form = ProfileForm(
             instance=self.request.user.get_profile(),
             initial={
@@ -82,9 +83,10 @@ class ProfileEditView(DetailView, FormMixin):
         return super(ProfileEditView, self).dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        form = ProfileForm(request.POST, request.FILES)
+        form = ProfileForm(request.POST, request.FILES, instance=request.user.get_profile())
         if form.is_valid():
-            form.save(commit=False)
+            form.save()
+
             user = request.user
             user.first_name = form.cleaned_data['name']
             user.last_name = form.cleaned_data['last_name']
