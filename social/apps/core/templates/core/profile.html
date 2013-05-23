@@ -24,6 +24,11 @@
             <hr>
         </div>
         <div class="span6 offset1">
+            {% if socialprofile.user == user %}
+                <div class="pull-right">
+                    <a href="{% url 'profile_edit_page' %}">edit</a>
+                </div>
+            {% endif %}
             <legend>{{ socialprofile.user.first_name }} {{ socialprofile.user.last_name }}</legend>
             <table style="width: 100%">
                 <tr>

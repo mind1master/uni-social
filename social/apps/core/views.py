@@ -4,7 +4,7 @@ from django.views.generic import DetailView, ListView
 from django.views.generic import DetailView
 from django.views.generic.edit import FormMixin
 from django.core.urlresolvers import reverse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.contrib.auth.views import login
 from django.views.decorators.http import require_POST
 from django.http import HttpResponseForbidden
@@ -54,6 +54,25 @@ class ProfileView(DetailView, FormMixin):
             return self.form_invalid(form)
 
 
+def profile_edit(request):
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=request.user.get_profile())
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('profile_page', kwargs={'pk': request.user.pk}))
+        else:
+            return render(request, 'core/profile_edit.html', {'form': form})
+
+    form = ProfileForm(
+        instance=request.user.get_profile(),
+        initial={
+            'name': request.user.first_name,
+            'last_name': request.user.last_name,
+            }
+    )
+    return render(request, 'core/profile_edit.html', {'form': form})
+
+
 class ProfileEditView(DetailView, FormMixin):
     template_name = 'core/profile_edit.html'
     model = SocialProfile
@@ -65,13 +84,15 @@ class ProfileEditView(DetailView, FormMixin):
     def get_context_data(self, **kwargs):
         context = super(ProfileEditView, self).get_context_data(**kwargs)
 
-        form = ProfileForm(
-            instance=self.request.user.get_profile(),
-            initial={
-                'name': self.request.user.first_name,
-                'last_name': self.request.user.last_name,
-            }
-        )
+        form = kwargs.get('form')
+        if not form:
+            form = ProfileForm(
+                instance=self.request.user.get_profile(),
+                initial={
+                    'name': self.request.user.first_name,
+                    'last_name': self.request.user.last_name,
+                }
+            )
         context['form'] = form
 
         return context
