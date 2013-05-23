@@ -33,6 +33,10 @@
         <script type="text/javascript" src="{% static 'js/libs/bootstrap/bootstrap-tooltip.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/libs/bootstrap/bootstrap-transition.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/libs/bootstrap/bootstrap-typeahead.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/check_messages.js' %}"></script>
+        <script type="text/javascript">
+            window.USER_PK = {{ user.pk }};
+        </script>
         {% block extra_head_js %}{% endblock extra_head_js %}
     {% endblock head_js %}
 
@@ -59,6 +63,7 @@
             <div class="offset2 span2">
                 <ul class="nav nav-tabs nav-stacked affix side-menu">
                 {% block side_menu %}
+                    {% if user.pk %}
                     <li>
                         {% if user.pk %}
                             <a href="{% url 'profile_page' user.pk %}">My Profile</a>
@@ -66,9 +71,13 @@
                             <a href="#">My profile</a>
                         {% endif %}
                     </li>
+                    <li><a href="{% url 'messages_page' %}">My Messages <span class="new-messages"></span></a></li>
                     <li><a href="{% url 'friends_page' %}">My Friends</a></li>
-                    <li><a href="#">My Messages</a></li>
-                    <li><a href="{% url 'logout_page' %}">Log out</a></li>
+                    <li><a href="{% url 'search_friends_page' %}">Search</a></li>
+                    <li><a href="{% url 'logout_page' %}">Log Out</a></li>
+
+                    {% endif %}
+
 
                 {% endblock side_menu %}
                 </ul>

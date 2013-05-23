@@ -19,6 +19,10 @@ class SocialProfile(models.Model):
     def get_wallposts_received(self):
         return AnyPost.objects.filter(receiver=self, post_type=AnyPost.WALL).order_by('-timestamp')
 
+    def get_new_messages_count(self):
+        return AnyPost.objects.filter(sender=self, post_type=AnyPost.MESSAGE, seen=False).count()
+
+
 class AnyPost(models.Model):
     MESSAGE = 'message'
     WALL = 'wall'
@@ -32,6 +36,7 @@ class AnyPost(models.Model):
     text = models.TextField(max_length=1000)
     timestamp = models.DateTimeField(auto_now_add=True)
     post_type = models.CharField(max_length=50, choices=POST_TYPES, default=MESSAGE)
+    seen = models.BooleanField(default=False)
 
     def __unicode__(self):
         return '{} to {} from {} at {}'.format(

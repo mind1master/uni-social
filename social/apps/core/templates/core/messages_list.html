@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% load static from staticfiles %}
+
+{% block head_title %}
+    Messages
+{% endblock head_title  %}
+
+{% block extra_head_js %}
+    <script type="text/javascript" src="{% static 'js/libs/jquery.shorten.js' %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(".message-text").shorten();
+        });
+    </script>
+{% endblock extra_head_js %}
+
+{% block content %}
+    {% if not messages%}
+        <h3><i>Really?</i> Go and post a message for your friend.</h3>
+    {% endif %}
+    {% for message in messages %}
+        <div class="row-fluid">
+            <div class="span3">
+                <img src="{{ MEDIA_URL }}/pic.jpg">
+            </div>
+            <div class="span9">
+                {% if message.sender == user %}
+                    <p class="text-info">Outgoing message to <br> <a href="{% url 'profile_page' message.receiver.pk %}">
+                        {{ message.receiver.first_name }} {{ message.receiver.last_name }}
+                    </a>
+                {% else %}
+                    <p class="text-success">Incoming message from <br> <a href="{% url 'profile_page' message.sender.pk %}">
+                        {{ message.sender.first_name }} {{ message.sender.last_name }}
+                     </a>
+                {% endif %}
+                <br><i>at {{ message.timestamp }}</i>
+                <blockquote>
+                    <p class="message-text">{{ message.text }}</p>
+                </blockquote>
+                {% if message.sender == user %}
+                    <a href="{% url 'message_write_page' message.receiver.pk %}" class="btn">Send one more</a>
+                {% else %}
+                    <a href="{% url 'message_write_page' message.sender.pk %}" class="btn">Reply</a>
+                {% endif %}
+            </div>
+         </div>
+        <br/><br/>
+    {% endfor %}
+
+{% endblock content %}

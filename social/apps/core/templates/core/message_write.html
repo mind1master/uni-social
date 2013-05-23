@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block head_title %}Send a message{% endblock %}
+
+{% block content %}
+    <h4>Composing a message</h4><br>
+    for <a href="{% url 'profile_page' friend.pk %}">
+        {{ friend.first_name }} {{ friend.last_name }}
+    </a>
+    <form action="" method="post">
+        {% csrf_token %}
+        <p><label id_for="id_text">Message body:</label>
+        <p><textarea class="input-block-level" id="id_text" name="text" rows="4"></textarea>
+            <input id="id_sender" name="sender" type="hidden" value="{{ user.pk }}">
+            <input id="id_receiver" name="receiver" type="hidden" value="{{ friend.pk }}">
+        <p><input type="submit" value="Send a message" class="btn btn-success">
+    </form>
+{% endblock content %}

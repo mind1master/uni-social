@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block head_title %}{{ socialprofile.user.first_name }} {{ socialprofile.user.last_name }}{% endblock %}
+{% block head_title %}Profile{% endblock %}
 
 {% block content %}
     <div class="row-fluid">
@@ -10,7 +10,7 @@
             <br/><br/>
             {% if socialprofile.user != user %}
                 {% if socialprofile in user.get_profile.friends.all %}
-                    {{ socialprofile.user.first_name }} is your friend!
+                    <a href="{% url 'message_write_page' socialprofile.user.pk %}" class="btn btn-success">Send a message</a>
                 {% else %}
                     <form action="{% url 'friends_manipulation' %}" method="POST">
                         {% csrf_token %}
@@ -50,7 +50,6 @@
         <div class="span12">
             <ul class="thumbnails">
                 <li class="span12">
-                    <div class="thumbnail">
                         <form action="" method="post">
                             {% csrf_token %}
                             <p><label id_for="id_text">Post something cheezy!</label>
@@ -59,7 +58,6 @@
                             <input id="id_receiver" name="receiver" type="hidden" value="{{ socialprofile.user.pk }}">
                             <p><input type="submit" value="Post wallpost" class="btn btn-success">
                         </form>
-                    </div>
                 </li>
             </ul>
 

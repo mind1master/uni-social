@@ -1,17 +1,21 @@
 # -*- coding: utf-8 -*-
+from annoying.decorators import render_to
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import TemplateView
 from django.views.generic import DetailView, ListView
-from django.views.generic import DetailView
 from django.views.generic.edit import FormMixin
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect, render
 from django.contrib.auth.views import login
 from django.views.decorators.http import require_POST
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, Http404, HttpResponse
 
 from social.apps.core.models import SocialProfile, AnyPost
+from social.apps.core.forms import WallPostForm, MessageForm
+from django.db.models import Q
 from social.apps.core.forms import WallPostForm, ProfileForm
-
 
 
 class HomeView(TemplateView):
@@ -116,7 +120,6 @@ class ProfileEditView(DetailView, FormMixin):
         else:
             return self.form_invalid(form)
 
-
 class FriendsView(ListView):
     template_name = 'core/friends_list.html'
     model = SocialProfile
@@ -127,6 +130,57 @@ class FriendsView(ListView):
         context['friends'] = self.request.user.get_profile().friends.all
         return context
 
+@login_required
+@render_to('core/messages_list.html')
+def messages_list(request):
+    messages = AnyPost.objects.filter(
+        post_type=AnyPost.MESSAGE,
+    )
+    messages = messages.filter(
+        Q(receiver=request.user) |
+        Q(sender=request.user)
+    ).order_by('seen', '-timestamp')
+    messages.update(seen=True)
+    return {
+        'messages': messages[:50],
+    }
+
+@login_required
+@render_to('core/message_write.html')
+def message_write(request, pk):
+    friend = User.objects.get(pk=pk)
+
+    if not friend.get_profile() in request.user.get_profile().friends.all():
+        raise Http404
+
+    form = MessageForm(request.POST or None)
+    if form.is_valid():
+        message = form.save(commit=False)
+        message.receiver = friend
+        message.sender = request.user
+        message.save()
+        return redirect(reverse('messages_page'))
+
+    return {
+        'form': form,
+        'friend': friend,
+    }
+
+@login_required
+@render_to('core/search_friends.html')
+def search_friends(request):
+    found = None
+    q = request.GET.get('q', None)
+    if q:
+        found = User.objects.filter(
+            Q(first_name__icontains=q) |
+            Q(last_name__icontains=q)
+        ).order_by('first_name')[:10]
+
+    return {
+        'found': found,
+        'q': q,
+    }
 
 def custom_login(request, **kwargs):
     if request.user.is_authenticated():
@@ -146,3 +200,11 @@ def friends_manipulation(request):
         #Adding a friend
         request.user.get_profile().friends.remove(SocialProfile.objects.get(pk=request.POST["pk"]))
         return redirect(reverse('home_page'))
+
+@csrf_exempt
+@require_POST
+def check_messages(request):
+    if request.POST.get('user_pk'):
+        user = User.objects.get(pk=request.POST.get('user_pk'))
+        return HttpResponse(user.get_profile().get_new_messages_count())
+    raise HttpResponseForbidden
