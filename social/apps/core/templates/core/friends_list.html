@@ -1,13 +1,18 @@
 {% extends 'base.html' %}
-
+{% block head_title %}
+    Friends list
+{% endblock head_title  %}
 {% block content %}
+    {% if not friends %}
+        <h3>Oh gush! Find some friends.</h3>
+    {% endif %}
     {% for friend in friends %}
 <div class="row-fluid">
     <div class="span4">
         <img src="{{ MEDIA_URL }}/pic.jpg">
     </div>
     <div class="span8">
-        <p><h4>{{ friend.user.first_name }} {{ friend.user.last_name }}</h4></p>
+        <p><a href="{% url 'profile_page' friend.pk %}"><h4>{{ friend.user.first_name }} {{ friend.user.last_name }}</h4></a></p>
         <p>Born at: {{ friend.date_of_birth }}</p>
         <p>Home town: {{ friend.home_town }}</p>
         <form  action="{% url 'friends_manipulation' %}" method="POST">
