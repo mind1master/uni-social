@@ -59,16 +59,16 @@
             <div class="offset2 span2">
                 <ul class="nav nav-tabs nav-stacked affix side-menu">
                 {% block side_menu %}
+                    {% if user.pk %}
                     <li>
-                        {% if user.pk %}
                             <a href="{% url 'profile_page' user.pk %}">My profile</a>
-                        {% else %}
-                            <a href="#">My profile</a>
-                        {% endif %}
                     </li>
                     <li><a href="{% url 'friends_page' %}">My Friends</a></li>
-                    <li><a href="#">My Messages</a></li>
+                    <li><a href="{% url 'messages_page' %}">My Messages</a></li>
                     <li><a href="{% url 'logout_page' %}">Log out</a></li>
+
+                    {% endif %}
+
 
                 {% endblock side_menu %}
                 </ul>

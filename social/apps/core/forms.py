@@ -20,3 +20,19 @@ class WallPostForm(ModelForm):
         if commit:
             instance.save()
         return instance
+
+
+class MessageForm(ModelForm):
+    sender = ModelChoiceField(queryset=User.objects.all(), widget=HiddenInput, required=False)
+    receiver = ModelChoiceField(queryset=User.objects.all(), widget=HiddenInput, required=False)
+
+    class Meta:
+        model = AnyPost
+        fields = ('text', 'sender', 'receiver')
+
+    def save(self, force_insert=False, force_update=False, commit=True):
+        instance = super(MessageForm, self).save(commit=False)
+        instance.post_type = AnyPost.MESSAGE
+        if commit:
+            instance.save()
+        return instance

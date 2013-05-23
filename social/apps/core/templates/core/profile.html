@@ -45,7 +45,6 @@
         <div class="span12">
             <ul class="thumbnails">
                 <li class="span12">
-                    <div class="thumbnail">
                         <form action="" method="post">
                             {% csrf_token %}
                             <p><label id_for="id_text">Post something cheezy!</label>
@@ -54,7 +53,6 @@
                             <input id="id_receiver" name="receiver" type="hidden" value="{{ socialprofile.user.pk }}">
                             <p><input type="submit" value="Post wallpost" class="btn btn-success">
                         </form>
-                    </div>
                 </li>
             </ul>
 

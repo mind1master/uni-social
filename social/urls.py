@@ -4,7 +4,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf import settings
 from django.conf.urls.static import static
 from social.apps.core.views import (HomeView, ProfileView, FriendsView,
-                                    friends_manipulation)
+                                    friends_manipulation, messages_list)
 from django.contrib.auth.decorators import login_required
 
 
@@ -20,6 +20,7 @@ urlpatterns = patterns('',
         }, name='logout_page'),
     url(r'^profile/(?P<pk>\d+)/$', login_required(ProfileView.as_view()), name='profile_page'),
     url(r'^friends/$', login_required(FriendsView.as_view()), name='friends_page'),
+    url(r'^messages/$', messages_list, name='messages_page'),
     url(r'^friends_manipulation/$', login_required(friends_manipulation), name='friends_manipulation'),
     url(r'^admin/', include(admin.site.urls)),
 )

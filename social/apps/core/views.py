@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from annoying.decorators import render_to
+from django.contrib.auth.decorators import login_required
 from django.views.generic.base import TemplateView
 from django.views.generic import DetailView, ListView
 from django.views.generic import DetailView
@@ -11,7 +13,7 @@ from django.http import HttpResponseForbidden
 
 from social.apps.core.models import SocialProfile, AnyPost
 from social.apps.core.forms import WallPostForm
-
+from django.db.models import Q
 
 
 class HomeView(TemplateView):
@@ -54,7 +56,6 @@ class ProfileView(DetailView, FormMixin):
             return self.form_invalid(form)
 
 
-
 class FriendsView(ListView):
     template_name = 'core/friends_list.html'
     model = SocialProfile
@@ -65,6 +66,19 @@ class FriendsView(ListView):
         context['friends'] = self.request.user.get_profile().friends.all
         return context
 
+@login_required
+@render_to('core/messages_list.html')
+def messages_list(request):
+    messages = AnyPost.objects.filter(
+        post_type=AnyPost.MESSAGE,
+    )
+    messages = messages.filter(
+        Q(receiver=request.user) |
+        Q(sender=request.user)
+    ).order_by('-timestamp')
+    return {
+        'messages': messages[:50],
+    }
 
 def custom_login(request, **kwargs):
     if request.user.is_authenticated():
