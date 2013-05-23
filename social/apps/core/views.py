@@ -103,6 +103,22 @@ def message_write(request, pk):
         'friend': friend,
     }
 
+@login_required
+@render_to('core/search_friends.html')
+def search_friends(request):
+    found = None
+    q = request.GET.get('q', None)
+    if q:
+        found = User.objects.filter(
+            Q(first_name__icontains=q) |
+            Q(last_name__icontains=q)
+        ).order_by('first_name')[:10]
+
+    return {
+        'found': found,
+        'q': q,
+    }
+
 def custom_login(request, **kwargs):
     if request.user.is_authenticated():
         return redirect('/', **kwargs)

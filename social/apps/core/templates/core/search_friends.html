@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block head_title %}
+    Search friends
+{% endblock head_title  %}
+{% block content %}
+    <form class="form-search" method="get" action=".">
+        <input type="text" class="input-medium search-query" name="q" value="{% if q %}{{ q }}{% endif %}">
+        <button type="submit" class="btn">Search</button>
+    </form>
+    {% if q %}
+        {% if found %}
+            {% for man in found %}
+                <div class="row-fluid">
+                    <div class="span4">
+                        <img src="{{ MEDIA_URL }}/pic.jpg">
+                    </div>
+                    <div class="span8">
+                        <p><a href="{% url 'profile_page' man.pk %}"><h4>{{ man.first_name }} {{ man.last_name }}</h4></a></p>
+                        <p>Born at: {{ man.get_profile.date_of_birth }}</p>
+                        <p>Home town: {{ man.get_profile.home_town }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <i>Nothing found</i>
+        {% endif %}
+    {% endif %}
+
+
+{% endblock content %}

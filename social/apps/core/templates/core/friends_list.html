@@ -4,7 +4,7 @@
 {% endblock head_title  %}
 {% block content %}
     {% if not friends %}
-        <h3>Oh gush! Find some friends.</h3>
+        <h3>Oh gush! <a href="{% url 'search_friends_page' %}">Find some friends</a></h3>
     {% endif %}
     {% for friend in friends %}
 <div class="row-fluid">

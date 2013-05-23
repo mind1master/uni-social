@@ -67,8 +67,9 @@
                     <li>
                             <a href="{% url 'profile_page' user.pk %}">My Profile</a>
                     </li>
-                    <li><a href="{% url 'friends_page' %}">My Friends</a></li>
                     <li><a href="{% url 'messages_page' %}">My Messages <span class="new-messages"></span></a></li>
+                    <li><a href="{% url 'friends_page' %}">My Friends</a></li>
+                    <li><a href="{% url 'search_friends_page' %}">Search</a></li>
                     <li><a href="{% url 'logout_page' %}">Log Out</a></li>
 
                     {% endif %}
