@@ -31,6 +31,10 @@ class ProfileForm(ModelForm):
         model = SocialProfile
         exclude = ['friends', 'user']
 
+class UserForm(forms.Form):
+    username = CharField(max_length=20)
+    password = CharField(max_length=35, widget=forms.PasswordInput())
+
 
 class MessageForm(ModelForm):
     sender = ModelChoiceField(queryset=User.objects.all(), widget=HiddenInput, required=False)

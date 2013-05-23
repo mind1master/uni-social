@@ -4,9 +4,10 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf import settings
 from django.conf.urls.static import static
 from social.apps.core.views import (HomeView, ProfileView, FriendsView,
-                                    friends_manipulation, profile_edit)
-                                    friends_manipulation, messages_list, message_write,
-                                    check_messages, search_friends)
+                                    friends_manipulation, profile_edit,
+                                    messages_list, message_write,
+                                    check_messages, search_friends,
+                                    register_user)
 from django.contrib.auth.decorators import login_required
 
 
@@ -27,6 +28,7 @@ urlpatterns = patterns('',
     url(r'^messages/$', messages_list, name='messages_page'),
     url(r'^messages/check/$', check_messages, name='check_messages'),
     url(r'^messages/write/(?P<pk>\d+)/$', message_write, name='message_write_page'),
+    url(r'^registration/$', register_user, name='register_page'),
     url(r'^friends_manipulation/$', login_required(friends_manipulation), name='friends_manipulation'),
     url(r'^admin/', include(admin.site.urls)),
 )

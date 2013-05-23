@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block head_title %}Sign Up{% endblock %}
+
+{% block extra_head_js %}
+<script src="{{ STATIC_URL }}/js/register.js"></script>
+{% endblock %}
+
+{% block content %}
+
+<legend>Please, Sign Up!</legend>
+{%if form.errors %}
+<div class="alert">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {{ form.errors }}
+</div>
+{% endif %}
+<form action="{% url 'register_page' %}" method="POST" class="form-horizontal">
+    {% csrf_token %}
+    <div class="control-group">
+        <label class="control-label">{{form.username.label_tag}}</label>
+        <div class="controls">{{form.username}}</div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">{{form.password1.label_tag}}</label>
+        <div class="controls">{{form.password1}}</div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">{{form.password2.label_tag}}</label>
+        <div class="controls">{{form.password2}}</div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <input class="btn btn-primary" type="submit" id="submit" name="submit" value="Sign up" />
+            <input type="hidden" name="next" value="/" />
+            or <a href="{% url 'login_page' %}">login</a>
+        </div>
+    </div>
+</form>
+
+{% endblock content %}

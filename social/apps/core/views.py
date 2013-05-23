@@ -15,7 +15,9 @@ from django.http import HttpResponseForbidden, Http404, HttpResponse
 from social.apps.core.models import SocialProfile, AnyPost
 from social.apps.core.forms import WallPostForm, MessageForm
 from django.db.models import Q
-from social.apps.core.forms import WallPostForm, ProfileForm
+from social.apps.core.forms import ProfileForm, UserForm
+from django.contrib.auth import authenticate, login as log_in
+from django.contrib.auth.forms import UserCreationForm
 
 
 class HomeView(TemplateView):
@@ -23,7 +25,7 @@ class HomeView(TemplateView):
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect(reverse('profile_page', kwargs={'pk': request.user.pk}))
+            return redirect(reverse('profile_page', kwargs={'pk': request.user.get_profile().pk}))
         return None
 
 
@@ -63,7 +65,7 @@ def profile_edit(request):
         form = ProfileForm(request.POST, request.FILES, instance=request.user.get_profile())
         if form.is_valid():
             form.save()
-            return redirect(reverse('profile_page', kwargs={'pk': request.user.pk}))
+            return redirect(reverse('profile_page', kwargs={'pk': request.user.get_profile().pk}))
         else:
             return render(request, 'core/profile_edit.html', {'form': form})
 
@@ -77,48 +79,28 @@ def profile_edit(request):
     return render(request, 'core/profile_edit.html', {'form': form})
 
 
-class ProfileEditView(DetailView, FormMixin):
-    template_name = 'core/profile_edit.html'
-    model = SocialProfile
-    form_class = ProfileForm
-
-    def get_success_url(self):
-        return reverse('profile_page', kwargs={'pk': self.get_object().pk})
-
-    def get_context_data(self, **kwargs):
-        context = super(ProfileEditView, self).get_context_data(**kwargs)
-
-        form = kwargs.get('form')
-        if not form:
-            form = ProfileForm(
-                instance=self.request.user.get_profile(),
-                initial={
-                    'name': self.request.user.first_name,
-                    'last_name': self.request.user.last_name,
-                }
-            )
-        context['form'] = form
-
-        return context
-
-    def dispatch(self, request, *args, **kwargs):
-        if not int(kwargs['pk']) == request.user.pk:
-            return redirect(reverse('profile_page', kwargs={'pk': self.get_object().pk}))
-
-        return super(ProfileEditView, self).dispatch(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        form = ProfileForm(request.POST, request.FILES, instance=request.user.get_profile())
+def register_user(request):
+    if request.user.is_authenticated and not request.user.is_anonymous:
+        return redirect(reverse('profile_page', kwargs={'pk': request.user.get_profile().pk}))
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
-
-            user = request.user
-            user.first_name = form.cleaned_data['name']
-            user.last_name = form.cleaned_data['last_name']
+            user = form.save()
+            SocialProfile.objects.create(user=user)
+            user.first_name = user.username
             user.save()
-            return self.form_valid(form)
+
+            user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password1'])
+            if user:
+                log_in(request, user)
+            return redirect(reverse('profile_edit_page'))
         else:
-            return self.form_invalid(form)
+            return render(request, 'core/register.html', {'form': form})
+
+    form = UserCreationForm()
+    return render(request, 'core/register.html', {'form': form})
+
+
 
 class FriendsView(ListView):
     template_name = 'core/friends_list.html'
