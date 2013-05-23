@@ -44,7 +44,7 @@
     <div class="row-fluid wallposts">
         <div class="span12">
             <ul class="thumbnails">
-                <li class="offset1 span10">
+                <li class="span12">
                     <div class="thumbnail">
                         <form action="" method="post">
                             {% csrf_token %}
@@ -61,7 +61,7 @@
             {% if wallposts %}
                 {% for post in wallposts %}
                     <ul class="thumbnails">
-                        <li class="offset1 span10">
+                        <li class="span12">
                             <div class="thumbnail">
                                 <h3>Post by {{ post.sender.first_name }} {{ post.sender.last_name }}</h3>
                                 <i>at {{ post.timestamp }}</i>
