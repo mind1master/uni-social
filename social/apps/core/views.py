@@ -65,6 +65,11 @@ def profile_edit(request):
         form = ProfileForm(request.POST, request.FILES, instance=request.user.get_profile())
         if form.is_valid():
             form.save()
+
+            request.user.first_name = form.cleaned_data['name']
+            request.user.last_name = form.cleaned_data['last_name']
+            request.user.save()
+
             return redirect(reverse('profile_page', kwargs={'pk': request.user.get_profile().pk}))
         else:
             return render(request, 'core/profile_edit.html', {'form': form})
