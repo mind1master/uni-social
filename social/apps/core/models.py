@@ -11,7 +11,7 @@ class SocialProfile(models.Model):
     phone_number = models.CharField(max_length=10, blank=True)
     skype_id = models.CharField(max_length=20, blank=True)
 
-    friends = models.ManyToManyField('SocialProfile', blank=True)
+    friends = models.ManyToManyField('SocialProfile', blank=True, null=True)
 
     def __unicode__(self):
         return 'Profile of {} {}'.format(self.user.first_name, self.user.last_name)
