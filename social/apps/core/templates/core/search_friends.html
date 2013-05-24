@@ -12,7 +12,7 @@
             {% for man in found %}
                 <div class="row-fluid">
                     <div class="span4">
-                        <img src="{{ MEDIA_URL }}/pic.jpg">
+                        <img src="{{ MEDIA_URL }}/{{ man.get_profile.avatar }}" class="img-polaroid">
                     </div>
                     <div class="span8">
                         <p><a href="{% url 'profile_page' man.pk %}"><h4>{{ man.first_name }} {{ man.last_name }}</h4></a></p>
