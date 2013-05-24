@@ -127,7 +127,7 @@ def messages_list(request):
         Q(receiver=request.user) |
         Q(sender=request.user)
     ).order_by('seen', '-timestamp')
-    messages.update(seen=True)
+    messages.filter(receiver=request.user).update(seen=True)
     return {
         'messages': messages[:50],
     }

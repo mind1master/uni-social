@@ -21,15 +21,20 @@
     {% endif %}
     {% for message in messages %}
         <div class="row-fluid">
-            <div class="span3">
-                <img src="{{ MEDIA_URL }}/pic.jpg">
-            </div>
-            <div class="span9">
+
                 {% if message.sender == user %}
+                    <div class="span3">
+                        <img src="{{ MEDIA_URL }}/{{ message.receiver.get_profile.avatar }}" class="img-polaroid">
+                    </div>
+                    <div class="offset1 span8">
                     <p class="text-info">Outgoing message to <br> <a href="{% url 'profile_page' message.receiver.pk %}">
                         {{ message.receiver.first_name }} {{ message.receiver.last_name }}
                     </a>
                 {% else %}
+                    <div class="span3">
+                        <img src="{{ MEDIA_URL }}/{{ message.sender.get_profile.avatar }}" class="img-polaroid">
+                    </div>
+                    <div class="offset1 span8">
                     <p class="text-success">Incoming message from <br> <a href="{% url 'profile_page' message.sender.pk %}">
                         {{ message.sender.first_name }} {{ message.sender.last_name }}
                      </a>

@@ -20,7 +20,7 @@ class SocialProfile(models.Model):
         return AnyPost.objects.filter(receiver=self, post_type=AnyPost.WALL).order_by('-timestamp')
 
     def get_new_messages_count(self):
-        return AnyPost.objects.filter(sender=self, post_type=AnyPost.MESSAGE, seen=False).count()
+        return AnyPost.objects.filter(receiver=self, post_type=AnyPost.MESSAGE, seen=False).count()
 
 
 class AnyPost(models.Model):
